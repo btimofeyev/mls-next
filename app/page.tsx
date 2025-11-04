@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Surface } from '@/components/ui/Surface';
 import { DivisionStatsPanel } from '@/components/DivisionStatsPanel';
 import { ResultSpotlight } from '@/components/dashboard/ResultSpotlight';
+import { SimplifiedMobileDashboard } from '@/components/mobile/SimplifiedMobileDashboard';
 import { DEFAULT_DIVISION_ID } from '@/lib/constants';
 import { getDivisionById } from '@/lib/getDivision';
 import { getDivisionStats } from '@/lib/getDivisionStats';
@@ -85,7 +86,7 @@ export default async function HomePage() {
     <div className="dashboard-shell">
       <div className="dashboard-glow" aria-hidden="true" />
       <div className="dashboard-content">
-        <section className="dashboard-header">
+        <section className="dashboard-header mobile-hidden">
           <Surface
             variant="solid"
             padding="lg"
@@ -121,7 +122,26 @@ export default async function HomePage() {
           </Surface>
         </section>
 
-        <section className="dashboard-panels">
+        {/* Simplified Mobile Dashboard */}
+        <section className="mobile-only">
+          <SimplifiedMobileDashboard
+            divisionName={divisionName}
+            divisionId={divisionId}
+            standings={standingsSnapshot}
+            scorers={topScorersSnapshot}
+            latestResults={recentResultsSnapshot}
+            headline={headlineSnapshot.length > 0 ? {
+              title: headlineSnapshot[0].title,
+              body: headlineSnapshot[0].body || undefined,
+              date: headlineSnapshot[0].created_at
+                ? formatDate(headlineSnapshot[0].created_at, { month: 'short', day: 'numeric' })
+                : 'Now'
+            } : null}
+          />
+        </section>
+
+        {/* Desktop Dashboard - Hidden on Mobile */}
+        <section className="dashboard-panels mobile-hidden">
           <Surface variant="solid" padding="xl" rounded="2xl" className="dashboard-card">
             <header className="panel-header">
               <div>
@@ -224,7 +244,7 @@ export default async function HomePage() {
 
               <ResultSpotlight results={recentResultsSnapshot} />
             </Surface>
-            
+
             <DivisionStatsPanel
               stats={divisionStats}
               className="dashboard-card division-stats-card"

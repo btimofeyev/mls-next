@@ -1,0 +1,421 @@
+/* Enhanced Standings Card */
+.enhancedStandingsCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Empty State */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-4xl) var(--spacing-xl);
+  min-height: 200px;
+}
+
+.emptyIcon {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-lg);
+  opacity: 0.6;
+}
+
+.emptyTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.emptyDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  max-width: 280px;
+}
+
+/* Standings List */
+.standingsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Standings Row */
+.standingsRow {
+  position: relative;
+  background: rgba(15, 24, 42, 0.6);
+  border: 1px solid rgba(99, 112, 152, 0.2);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.standingsRow:hover {
+  background: rgba(15, 24, 42, 0.8);
+  border-color: rgba(99, 112, 152, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.standingsRowHighlighted {
+  border-color: var(--color-accent);
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.standingsRowLeader {
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+/* Progress Bar */
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+  border-radius: 0 0 3px 0;
+  transition: width var(--transition-slow);
+  z-index: 2;
+}
+
+/* Row Content */
+.standingsRowContent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  min-height: 72px;
+}
+
+/* Team Section */
+.standingsTeam {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex: 1;
+  min-width: 0;
+}
+
+.standingsRank {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 32px;
+}
+
+.rankNumber {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.crownIcon {
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-xs);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.standingsTeamInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.teamLink {
+  display: block;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  line-height: var(--line-height-tight);
+  transition: color var(--transition-fast);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.teamLink:hover {
+  color: var(--color-accent);
+}
+
+.teamMeta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin-top: var(--spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Metrics Section */
+.standingsMetrics {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 44px; /* Touch target size */
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.metricValue {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.metricLabel {
+  font-size: var(--font-size-xxs);
+  color: var(--color-text-tertiary);
+  margin-top: var(--spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.metricHighlight {
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.metricHighlight .metricValue {
+  color: var(--color-accent);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Expand Button */
+.expandButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--color-text-secondary);
+}
+
+.expandButton:hover {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--color-accent);
+}
+
+.expandButton:active {
+  transform: scale(0.95);
+}
+
+.expandIcon {
+  font-size: var(--font-size-lg);
+  line-height: 1;
+  transition: transform var(--transition-normal);
+  display: block;
+}
+
+.expandIconExpanded {
+  transform: rotate(180deg);
+}
+
+/* Expanded Content */
+.expandedContent {
+  border-top: 1px solid rgba(99, 112, 152, 0.2);
+  background: rgba(8, 15, 30, 0.4);
+  padding: var(--spacing-lg);
+  animation: slideDown var(--transition-normal) ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.expandedMetrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.expandedMetric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-sm);
+  background: rgba(15, 24, 42, 0.6);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(99, 112, 152, 0.1);
+}
+
+.expandedMetricValue {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.expandedMetricLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin-top: var(--spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.recordDisplay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: rgba(37, 99, 235, 0.1);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+.recordLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.recordValue {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-accent);
+}
+
+/* Full Table Link */
+.fullTableLink {
+  margin-top: var(--spacing-lg);
+  padding: 0 var(--spacing-lg);
+}
+
+.viewFullButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: var(--radius-lg);
+  color: var(--color-accent);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  min-height: 44px; /* Touch target size */
+}
+
+.viewFullButton:hover {
+  background: rgba(37, 99, 235, 0.2);
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.viewFullButton:active {
+  transform: translateY(0);
+}
+
+.buttonArrow {
+  font-size: var(--font-size-base);
+  transition: transform var(--transition-normal);
+}
+
+.viewFullButton:hover .buttonArrow {
+  transform: translateX(4px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .standingsRowContent {
+    padding: var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
+
+  .standingsMetrics {
+    gap: var(--spacing-sm);
+  }
+
+  .metric {
+    min-width: 40px;
+    padding: var(--spacing-xs);
+  }
+
+  .metricValue {
+    font-size: var(--font-size-sm);
+  }
+
+  .teamLink {
+    font-size: var(--font-size-sm);
+  }
+
+  .expandedMetrics {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: var(--spacing-sm);
+  }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .standingsRow {
+    transition: none;
+  }
+
+  .expandButton {
+    transition: none;
+  }
+
+  .expandIcon {
+    transition: none;
+  }
+
+  .expandedContent {
+    animation: none;
+  }
+
+  .viewFullButton {
+    transition: none;
+  }
+
+  .buttonArrow {
+    transition: none;
+  }
+}
+
+/* Touch optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .expandButton {
+    /* Larger touch targets */
+    width: 48px;
+    height: 48px;
+  }
+
+  .standingsRow:active {
+    background: rgba(15, 24, 42, 0.9);
+  }
+
+  .metric:active {
+    background: rgba(37, 99, 235, 0.15);
+  }
+}

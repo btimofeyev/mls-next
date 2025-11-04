@@ -1,0 +1,280 @@
+/* Mobile Dashboard Tabs */
+.mobileDashboardTabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  height: 100%;
+  min-height: 400px;
+}
+
+/* Tab Navigation */
+.mobileTabNav {
+  position: relative;
+  background: rgba(15, 24, 42, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(99, 112, 152, 0.2);
+  padding: var(--spacing-xs);
+  overflow: hidden;
+}
+
+.mobileTabNavInner {
+  display: flex;
+  position: relative;
+  z-index: 2;
+}
+
+.mobileTabButton {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-sm);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px; /* Ensure minimum touch target size */
+  min-width: 44px;
+}
+
+.mobileTabButton:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--color-text-secondary);
+}
+
+.mobileTabButton--active {
+  background: var(--color-accent);
+  color: var(--color-text-inverse);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.mobileTabIcon {
+  font-size: var(--font-size-lg);
+  line-height: 1;
+  display: block;
+}
+
+.mobileTabLabel {
+  font-size: var(--font-size-xxs);
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Tab Indicator */
+.mobileTabIndicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transition: transform var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+/* Tab Surface */
+.mobileTabSurface {
+  flex: 1;
+  min-height: 0;
+  background: rgba(15, 24, 42, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(99, 112, 152, 0.2);
+  overflow: hidden;
+}
+
+/* Tab Viewport */
+.mobileTabViewport {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.mobileTabContent {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInUp var(--transition-normal) ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tab Header */
+.mobileTabHeader {
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid rgba(99, 112, 152, 0.2);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Tab Body */
+.mobileTabBody {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Mobile Results Container */
+.mobileResultsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* Empty States */
+.mobileEmptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-4xl) var(--spacing-xl);
+  min-height: 200px;
+}
+
+.mobileEmptyIcon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-lg);
+  opacity: 0.6;
+}
+
+.mobileEmptyTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.mobileEmptyDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  max-width: 280px;
+}
+
+/* Swipe Hint */
+.mobileSwipeHint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  opacity: 0.6;
+  transition: opacity var(--transition-normal);
+}
+
+.mobileSwipeHint:hover {
+  opacity: 1;
+}
+
+.swipeHintText {
+  font-size: var(--font-size-xxs);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: var(--font-weight-medium);
+}
+
+.swipeHintDots {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.swipeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-border-strong);
+  transition: all var(--transition-normal);
+}
+
+.swipeDot--active {
+  background: var(--color-accent);
+  transform: scale(1.2);
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .mobileTabButton {
+    padding: var(--spacing-sm) var(--spacing-xs);
+    gap: var(--spacing-xs);
+  }
+
+  .mobileTabIcon {
+    font-size: var(--font-size-md);
+  }
+
+  .mobileTabLabel {
+    font-size: var(--font-size-xxs);
+  }
+
+  .mobileTabNav {
+    padding: var(--spacing-xs);
+  }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .mobileTabContent {
+    animation: none;
+  }
+
+  .mobileTabIndicator {
+    transition: none;
+  }
+
+  .mobileTabButton {
+    transition: none;
+  }
+
+  .swipeDot {
+    transition: none;
+  }
+
+  .mobileSwipeHint {
+    transition: none;
+  }
+}
+
+/* Touch optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .mobileTabButton {
+    /* Larger touch targets for mobile */
+    min-height: 48px;
+    min-width: 48px;
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+
+  .mobileTabButton:hover {
+    /* Remove hover effects on touch devices */
+    background: transparent;
+    color: var(--color-text-tertiary);
+  }
+
+  .mobileTabButton:active {
+    transform: scale(0.95);
+  }
+
+  .mobileTabButton--active:active {
+    transform: scale(0.98);
+  }
+}

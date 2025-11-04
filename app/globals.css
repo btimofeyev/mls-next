@@ -1180,14 +1180,76 @@ img {
 .py-lg { padding-top: var(--spacing-lg); padding-bottom: var(--spacing-lg); }
 .py-xl { padding-top: var(--spacing-xl); padding-bottom: var(--spacing-xl); }
 
+/* Mobile utility classes */
+.mobile-only {
+  display: none;
+}
+
 /* Mobile-first optimizations */
 @media (max-width: 639px) {
+  .mobile-only {
+    display: block;
+  }
+
+  .mobile-hidden {
+    display: none;
+  }
+
   .mobile\:hidden {
     display: none;
   }
 
   .mobile\:full-width {
     width: 100%;
+  }
+
+  /* Hide desktop dashboard header on mobile */
+  .dashboard-header {
+    display: none !important;
+  }
+
+  .dashboard-header.mobile-hidden {
+    display: none !important;
+  }
+
+  /* Hide dashboard panels on mobile */
+  .dashboard-panels {
+    display: none !important;
+  }
+
+  .dashboard-panels-secondary {
+    display: none !important;
+  }
+
+  /* Hide dashboard shell and glow on mobile */
+  .dashboard-shell {
+    display: none;
+  }
+
+  .dashboard-glow {
+    display: none;
+  }
+
+  /* Allow mobile page scrolling */
+  body {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+  }
+
+  html {
+    height: auto !important;
+  }
+
+  /* Fix app shell containers for mobile scrolling */
+  .app-shell {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow: visible !important;
+  }
+
+  .app-main {
+    overflow: visible !important;
   }
 
   .mobile\:text-center {
@@ -3266,6 +3328,19 @@ button, a, input, textarea, select {
 
 .dashboard-card--compact {
   gap: var(--spacing-lg);
+}
+
+/* Mobile Dashboard Section */
+.mobile-dashboard-section {
+  display: none;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+@media (max-width: 639px) {
+  .mobile-dashboard-section {
+    display: flex;
+  }
 }
 
 .panel-status {

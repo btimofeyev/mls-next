@@ -7,6 +7,7 @@ import './globals.css';
 import { Container } from '@/components/ui/Container';
 import { PrimaryNav, type NavItem } from '@/components/navigation/PrimaryNav';
 import { BottomNav } from '@/components/navigation/BottomNav';
+import { EnhancedBottomNav } from '@/components/mobile/EnhancedBottomNav';
 import { SWRProvider } from '@/components/providers/SWRProvider';
 import { PullToRefreshGate } from '@/components/providers/PullToRefreshGate';
 import { DEFAULT_DIVISION_ID } from '@/lib/constants';
@@ -117,7 +118,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 </div>
               </Container>
             </footer>
-            <BottomNav items={navigation} />
+            <EnhancedBottomNav
+              items={navigation}
+              showNotificationBadges={true}
+            />
           </div>
 
           <PullToRefreshGate />

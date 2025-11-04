@@ -1,0 +1,461 @@
+/* Enhanced Top Scorers Card */
+.enhancedTopScorersCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Empty State */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-4xl) var(--spacing-xl);
+  min-height: 200px;
+}
+
+.emptyIcon {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-lg);
+  opacity: 0.6;
+}
+
+.emptyTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.emptyDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  max-width: 280px;
+}
+
+/* Scorers List */
+.scorersList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Scorer Row */
+.scorerRow {
+  position: relative;
+  background: rgba(15, 24, 42, 0.6);
+  border: 1px solid rgba(99, 112, 152, 0.2);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.scorerRow:hover {
+  background: rgba(15, 24, 42, 0.8);
+  border-color: rgba(99, 112, 152, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.scorerRowTopThree {
+  border-color: rgba(251, 191, 36, 0.3);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.05), rgba(15, 24, 42, 0.6));
+}
+
+/* Progress Bar */
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #10b981, #059669);
+  border-radius: 0 0 3px 0;
+  transition: width var(--transition-slow);
+  z-index: 2;
+}
+
+.scorerRowTopThree .progressBar {
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+}
+
+/* Row Content */
+.scorerRowContent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  min-height: 72px;
+}
+
+/* Scorer Info */
+.scorerInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex: 1;
+  min-width: 0;
+}
+
+.rankBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.rankBadgegold {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border: 2px solid rgba(251, 191, 36, 0.4);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+}
+
+.rankBadgesilver {
+  background: linear-gradient(135deg, #e5e7eb, #9ca3af);
+  border: 2px solid rgba(156, 163, 175, 0.4);
+  box-shadow: 0 4px 12px rgba(156, 163, 175, 0.2);
+}
+
+.rankBadgebronze {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  border: 2px solid rgba(249, 115, 22, 0.4);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+}
+
+.rankBadgedefault {
+  background: rgba(37, 99, 235, 0.1);
+  border: 2px solid rgba(37, 99, 235, 0.2);
+  color: var(--color-accent);
+}
+
+.rankIcon {
+  font-size: var(--font-size-base);
+  line-height: 1;
+}
+
+.playerDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.playerName {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+  margin-bottom: var(--spacing-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.teamLink {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.teamLink:hover {
+  color: var(--color-accent);
+}
+
+.teamLink::before {
+  content: '👥';
+  font-size: var(--font-size-xs);
+}
+
+/* Goals Section */
+.goalsSection {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.goalsCount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+
+.goalsNumber {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.goalsLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin-top: var(--spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.matchesInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 50px;
+}
+
+.matchesNumber {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.matchesLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin-top: var(--spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Expand Button */
+.expandButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--color-text-secondary);
+}
+
+.expandButton:hover {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--color-accent);
+}
+
+.expandButton:active {
+  transform: scale(0.95);
+}
+
+.expandIcon {
+  font-size: var(--font-size-lg);
+  line-height: 1;
+  transition: transform var(--transition-normal);
+  display: block;
+}
+
+.expandIconExpanded {
+  transform: rotate(180deg);
+}
+
+/* Expanded Content */
+.expandedContent {
+  border-top: 1px solid rgba(99, 112, 152, 0.2);
+  background: rgba(8, 15, 30, 0.4);
+  padding: var(--spacing-lg);
+  animation: slideDown var(--transition-normal) ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.expandedStats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-md);
+  background: rgba(15, 24, 42, 0.6);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(99, 112, 152, 0.1);
+}
+
+.statLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.statValue {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-accent);
+  text-align: center;
+}
+
+/* Achievement Badges */
+.achievementBadges {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.achievementBadge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  color: var(--color-accent);
+  font-weight: var(--font-weight-medium);
+}
+
+.achievementIcon {
+  font-size: var(--font-size-sm);
+}
+
+.achievementText {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Full Leaderboard Link */
+.fullLeaderboardLink {
+  margin-top: var(--spacing-lg);
+  padding: 0 var(--spacing-lg);
+}
+
+.viewFullButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: var(--radius-lg);
+  color: var(--color-accent);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  min-height: 44px; /* Touch target size */
+}
+
+.viewFullButton:hover {
+  background: rgba(37, 99, 235, 0.2);
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.viewFullButton:active {
+  transform: translateY(0);
+}
+
+.buttonArrow {
+  font-size: var(--font-size-base);
+  transition: transform var(--transition-normal);
+}
+
+.viewFullButton:hover .buttonArrow {
+  transform: translateX(4px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .scorerRowContent {
+    padding: var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
+
+  .rankBadge {
+    width: 36px;
+    height: 36px;
+    font-size: var(--font-size-xs);
+  }
+
+  .playerName {
+    font-size: var(--font-size-sm);
+  }
+
+  .goalsNumber {
+    font-size: var(--font-size-lg);
+  }
+
+  .expandedStats {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .scorerRow {
+    transition: none;
+  }
+
+  .expandButton {
+    transition: none;
+  }
+
+  .expandIcon {
+    transition: none;
+  }
+
+  .expandedContent {
+    animation: none;
+  }
+
+  .viewFullButton {
+    transition: none;
+  }
+
+  .buttonArrow {
+    transition: none;
+  }
+}
+
+/* Touch optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .expandButton {
+    /* Larger touch targets */
+    width: 48px;
+    height: 48px;
+  }
+
+  .scorerRow:active {
+    background: rgba(15, 24, 42, 0.9);
+  }
+
+  .rankBadge:active {
+    transform: scale(0.95);
+  }
+}
