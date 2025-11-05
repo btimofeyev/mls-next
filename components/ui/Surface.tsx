@@ -1,4 +1,5 @@
-import type { HTMLAttributes } from 'react';
+import type { HTMLAttributes, ForwardRefExoticComponent, RefAttributes } from 'react';
+import { forwardRef } from 'react';
 
 type SurfaceProps = HTMLAttributes<HTMLDivElement> & {
   padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -10,7 +11,7 @@ type SurfaceProps = HTMLAttributes<HTMLDivElement> & {
   bordered?: boolean;
 };
 
-export function Surface({
+export const Surface = forwardRef<HTMLDivElement, SurfaceProps>(({
   padding = 'md',
   variant = 'solid',
   rounded = 'lg',
@@ -21,7 +22,7 @@ export function Surface({
   className,
   children,
   ...rest
-}: SurfaceProps) {
+}, ref) => {
   const paddingClasses = {
     none: '',
     xs: 'p-xs',
@@ -71,6 +72,7 @@ export function Surface({
 
   return (
     <div
+      ref={ref}
       className={`
         ${variantClasses[variant]}
         ${roundedClasses[rounded]}
@@ -87,4 +89,6 @@ export function Surface({
       {children}
     </div>
   );
-}
+});
+
+Surface.displayName = 'Surface';

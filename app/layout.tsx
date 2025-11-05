@@ -82,12 +82,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
                 <div className="app-header-actions">
                   <PrimaryNav items={navigation} />
-                  <Link
-                    href="/admin"
-                    className="app-header-cta"
-                  >
-                    Admin
-                  </Link>
                 </div>
               </Container>
             </header>

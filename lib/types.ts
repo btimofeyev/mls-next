@@ -62,6 +62,24 @@ export interface Headline {
   created_at: string | null;
 }
 
+export interface HeadlineWithDetails extends Headline {
+  matches: {
+    id: string;
+    home_team: {
+      name: string;
+      short_name: string;
+    } | null;
+    away_team: {
+      name: string;
+      short_name: string;
+    } | null;
+    match_date: string | null;
+  } | null;
+  divisions: {
+    name: string;
+  } | null;
+}
+
 export interface StandingRow {
   teamId: string;
   teamName: string;

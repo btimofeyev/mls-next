@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabaseClient';
 import { getAdminFromRequest } from '@/lib/adminAuth';
-import type { NewHeadlinePayload, Headline } from '@/lib/types';
+import type { NewHeadlinePayload } from '@/lib/types';
 
 function validateHeadline(payload: NewHeadlinePayload): string | null {
   if (!payload.division_id) return 'Division is required.';
@@ -9,22 +9,20 @@ function validateHeadline(payload: NewHeadlinePayload): string | null {
   return null;
 }
 
-// GET /api/headlines - Retrieve all headlines
-export async function GET(request: Request) {
+// GET /api/headlines/[headlineId] - Retrieve specific headline
+export async function GET(
+  request: Request,
+  { params }: { params: { headlineId: string } }
+) {
   const admin = await getAdminFromRequest(request);
   if (!admin) {
     return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
   }
 
   try {
-    const { searchParams } = new URL(request.url);
-    const divisionId = searchParams.get('division_id');
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const offset = parseInt(searchParams.get('offset') || '0');
-
     const supabase = createSupabaseServerClient();
 
-    let query = supabase
+    const { data, error } = await supabase
       .from('headlines')
       .select(`
         *,
@@ -36,27 +34,27 @@ export async function GET(request: Request) {
         ),
         divisions (name)
       `)
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
-
-    if (divisionId) {
-      query = query.eq('division_id', divisionId);
-    }
-
-    const { data, error } = await query;
+      .eq('id', params.headlineId)
+      .single();
 
     if (error) {
+      if (error.code === 'PGRST116') {
+        return NextResponse.json({ error: 'Headline not found.' }, { status: 404 });
+      }
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ headlines: data || [] });
+    return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : 'Unexpected error.' }, { status: 500 });
   }
 }
 
-// POST /api/headlines - Create new headline
-export async function POST(request: Request) {
+// PUT /api/headlines/[headlineId] - Update specific headline
+export async function PUT(
+  request: Request,
+  { params }: { params: { headlineId: string } }
+) {
   const admin = await getAdminFromRequest(request);
   if (!admin) {
     return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
@@ -73,20 +71,55 @@ export async function POST(request: Request) {
 
     const { data, error } = await supabase
       .from('headlines')
-      .insert({
+      .update({
         division_id: payload.division_id,
         match_id: payload.match_id,
         title: payload.title,
         body: payload.body,
       })
-      .select('id')
+      .eq('id', params.headlineId)
+      .select()
       .single();
 
-    if (error || !data) {
-      return NextResponse.json({ error: error?.message ?? 'Failed to add headline.' }, { status: 500 });
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return NextResponse.json({ error: 'Headline not found.' }, { status: 404 });
+      }
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ id: data.id }, { status: 201 });
+    return NextResponse.json(data);
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Unexpected error.' }, { status: 500 });
+  }
+}
+
+// DELETE /api/headlines/[headlineId] - Delete specific headline
+export async function DELETE(
+  request: Request,
+  { params }: { params: { headlineId: string } }
+) {
+  const admin = await getAdminFromRequest(request);
+  if (!admin) {
+    return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
+  }
+
+  try {
+    const supabase = createSupabaseServerClient();
+
+    const { error } = await supabase
+      .from('headlines')
+      .delete()
+      .eq('id', params.headlineId);
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return NextResponse.json({ error: 'Headline not found.' }, { status: 404 });
+      }
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : 'Unexpected error.' }, { status: 500 });
   }
