@@ -1,14 +1,36 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { DEFAULT_DIVISION_ID } from '@/lib/constants';
-import { getDivisionById } from '@/lib/getDivision';
+import { getDivisions } from '@/lib/getDivision';
 import { getTeamsByDivision } from '@/lib/getTeams';
 import { Surface } from '@/components/ui/Surface';
+import { DivisionSelector } from '@/components/DivisionSelector';
+import { resolveActiveDivision } from '@/lib/resolveDivision';
 
 export const revalidate = 60;
 
-export default async function TeamsIndexPage() {
-  const divisionId = DEFAULT_DIVISION_ID;
-  const [division, teams] = await Promise.all([getDivisionById(divisionId), getTeamsByDivision(divisionId)]);
+type TeamsIndexPageProps = {
+  searchParams?: Record<string, string | string[] | undefined>;
+};
+
+export default async function TeamsIndexPage({ searchParams }: TeamsIndexPageProps) {
+  const divisions = await getDivisions();
+  const requestedDivisionId = typeof searchParams?.divisionId === 'string'
+    ? searchParams.divisionId
+    : undefined;
+
+  const { activeDivision, shouldRedirect } = resolveActiveDivision({
+    divisions,
+    requestedDivisionId,
+    fallbackDivisionId: DEFAULT_DIVISION_ID,
+  });
+
+  if (shouldRedirect) {
+    redirect(`/teams?divisionId=${activeDivision.id}`);
+  }
+
+  const divisionId = activeDivision.id;
+  const teams = await getTeamsByDivision(divisionId);
 
   const totalClubs = teams.length;
 
@@ -24,8 +46,12 @@ export default async function TeamsIndexPage() {
                   Club Directory
                 </div>
                 <h1 className="teams-header-title">
-                  {division?.name ?? 'Division Teams'}
+                  {activeDivision.name}
                 </h1>
+                <DivisionSelector
+                  divisions={divisions}
+                  selectedDivisionId={divisionId}
+                />
               </div>
             </div>
           </Surface>
@@ -40,7 +66,7 @@ export default async function TeamsIndexPage() {
             </div>
             <div className="teams-stat-compact">
               <span className="teams-stat-icon">🗺️</span>
-              <span className="teams-stat-value">{division?.short_name ?? 'N/A'}</span>
+              <span className="teams-stat-value">{activeDivision.short_name ?? 'N/A'}</span>
               <span className="teams-stat-label">Division</span>
             </div>
           </div>

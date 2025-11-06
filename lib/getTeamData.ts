@@ -3,6 +3,7 @@ import { getDivisionById } from './getDivision';
 import { getStandings } from './getStandings';
 import { getTeamById } from './getTeams';
 import type { MatchNoteSummary, TeamPageData, TeamRecentMatch, TeamRecordSummary, TeamScorerRow } from './types';
+import { formatPlayerDisplayName } from './utils';
 
 type MatchWithTeams = {
   id: string;
@@ -188,7 +189,7 @@ export async function getTeamPageData(teamId: string): Promise<TeamPageData | nu
       } else {
         tallies.set(goal.player_id, {
           playerId: goal.player_id,
-          playerName: goal.player.name,
+          playerName: formatPlayerDisplayName(goal.player.name),
           goals: 1,
           matchIds: new Set([goal.match_id]),
         });

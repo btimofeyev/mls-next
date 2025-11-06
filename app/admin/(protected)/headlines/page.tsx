@@ -1,10 +1,14 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 import { DEFAULT_DIVISION_ID } from '@/lib/constants';
 import { Surface } from '@/components/ui/Surface';
 import { getHeadlinesForAdmin } from '@/lib/getHeadlinesForAdmin';
 import { AdminPageWrapper } from '@/app/admin/components/AdminPageWrapper';
 import { HeadlineActions } from '@/components/HeadlineActions';
+import { getDivisions } from '@/lib/getDivision';
+import { resolveActiveDivision } from '@/lib/resolveDivision';
+import { DivisionSelector } from '@/components/DivisionSelector';
 
 function formatDate(dateString: string | null) {
   if (!dateString) return 'No date';
@@ -26,8 +30,27 @@ function formatDateTime(dateString: string | null) {
 
 // No revalidation for admin pages - always fetch fresh data
 
-export default async function AdminHeadlinesPage() {
-  const divisionId = DEFAULT_DIVISION_ID;
+type AdminHeadlinesPageProps = {
+  searchParams?: Record<string, string | string[] | undefined>;
+};
+
+export default async function AdminHeadlinesPage({ searchParams }: AdminHeadlinesPageProps) {
+  const divisions = await getDivisions();
+  const requestedDivisionId = typeof searchParams?.divisionId === 'string'
+    ? searchParams.divisionId
+    : undefined;
+
+  const { activeDivision, shouldRedirect } = resolveActiveDivision({
+    divisions,
+    requestedDivisionId,
+    fallbackDivisionId: DEFAULT_DIVISION_ID,
+  });
+
+  if (shouldRedirect) {
+    redirect(`/admin/headlines?divisionId=${activeDivision.id}`);
+  }
+
+  const divisionId = activeDivision.id;
   const headlines = await getHeadlinesForAdmin(divisionId, 50);
 
   return (
@@ -42,6 +65,10 @@ export default async function AdminHeadlinesPage() {
             <p>
               Manage headlines that appear on the public dashboard. Edit or remove outdated content.
             </p>
+            <DivisionSelector
+              divisions={divisions}
+              selectedDivisionId={divisionId}
+            />
           </div>
           <Link
             href="/admin/add-headline"

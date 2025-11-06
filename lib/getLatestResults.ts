@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import { createSupabaseServerClient } from './supabaseClient';
 import type { GoalSummary, LatestResult } from './types';
+import { formatPlayerDisplayName } from './utils';
 
 type MatchWithTeams = {
   id: string;
@@ -115,7 +116,7 @@ export async function fetchLatestResults(divisionId: string, limit = 5): Promise
       } else {
         tallies.set(goal.player_id, {
           playerId: goal.player_id,
-          playerName: goal.player.name,
+          playerName: formatPlayerDisplayName(goal.player.name),
           goals: 1,
         });
       }

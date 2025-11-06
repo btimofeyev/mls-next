@@ -1,11 +1,14 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { Surface } from '@/components/ui/Surface';
 import { TopScorersTable } from '@/components/TopScorersTable';
 import ScorerSearch from '@/components/ScorerSearch';
 import { MobileLeaderboardPage } from '@/components/mobile/MobileLeaderboardPage';
-import { getDivisionById } from '@/lib/getDivision';
+import { DivisionSelector } from '@/components/DivisionSelector';
+import { DEFAULT_DIVISION_ID } from '@/lib/constants';
+import { getDivisions } from '@/lib/getDivision';
 import { getTopScorers } from '@/lib/getTopScorers';
+import { resolveActiveDivision } from '@/lib/resolveDivision';
 
 type LeaderboardPageProps = {
   params: {
@@ -18,13 +21,20 @@ export const revalidate = 30;
 export default async function LeaderboardPage({ params }: LeaderboardPageProps) {
   const { divisionId } = params;
 
-  const division = await getDivisionById(divisionId);
-  if (!division) {
-    notFound();
+  const divisions = await getDivisions();
+  const { activeDivision, shouldRedirect } = resolveActiveDivision({
+    divisions,
+    requestedDivisionId: divisionId,
+    fallbackDivisionId: DEFAULT_DIVISION_ID,
+  });
+
+  if (shouldRedirect) {
+    redirect(`/leaderboard/${activeDivision.id}`);
   }
 
-  const scorers = await getTopScorers(divisionId);
-  const topScorer = scorers[0];
+  const activeDivisionId = activeDivision.id;
+
+  const scorers = await getTopScorers(activeDivisionId);
   const topScorersList = scorers.slice(0, 20);
   const totalGoalsTracked = scorers.reduce((acc, scorer) => acc + scorer.goals, 0);
   const clubsOnTheBoard = new Set(scorers.map((scorer) => scorer.teamShortName)).size;
@@ -33,9 +43,15 @@ export default async function LeaderboardPage({ params }: LeaderboardPageProps) 
     <>
       {/* Mobile Version */}
       <div className="mobile-only">
+        <Surface variant="solid" padding="md" rounded="xl" className="dashboard-card">
+          <DivisionSelector
+            divisions={divisions}
+            selectedDivisionId={activeDivisionId}
+          />
+        </Surface>
         <MobileLeaderboardPage
-          divisionName={division.name}
-          divisionId={divisionId}
+          divisionName={activeDivision.name}
+          divisionId={activeDivisionId}
           scorers={scorers}
           totalGoalsTracked={totalGoalsTracked}
           clubsOnTheBoard={clubsOnTheBoard}
@@ -55,11 +71,15 @@ export default async function LeaderboardPage({ params }: LeaderboardPageProps) 
                       Golden Boot Radar
                     </div>
                     <h1 className="leaderboard-header-title">
-                      {division.name}
+                      {activeDivision.name}
                     </h1>
+                    <DivisionSelector
+                      divisions={divisions}
+                      selectedDivisionId={activeDivisionId}
+                    />
                   </div>
                   <Link
-                    href={`/standings/${divisionId}`}
+                    href={`/standings/${activeDivisionId}`}
                     className="leaderboard-header-action"
                   >
                     View standings →

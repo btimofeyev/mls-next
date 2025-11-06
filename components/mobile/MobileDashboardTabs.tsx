@@ -8,7 +8,6 @@ import { DivisionStatsPanel } from '@/components/DivisionStatsPanel';
 import { EnhancedStandingsCard } from '@/components/mobile/EnhancedStandingsCard';
 import { EnhancedTopScorersCard } from '@/components/mobile/EnhancedTopScorersCard';
 import { ResultSpotlight } from '@/components/dashboard/ResultSpotlight';
-import { DEFAULT_DIVISION_ID } from '@/lib/constants';
 import styles from './MobileDashboardTabs.module.css';
 
 interface MobileDashboardTabsProps {
@@ -17,6 +16,7 @@ interface MobileDashboardTabsProps {
   latestResults: any[];
   divisionStats: any;
   divisionName: string;
+  divisionId: string;
 }
 
 type TabType = 'standings' | 'results' | 'scorers' | 'stats';
@@ -34,6 +34,7 @@ export function MobileDashboardTabs({
   latestResults,
   divisionStats,
   divisionName,
+  divisionId,
 }: MobileDashboardTabsProps) {
   const [activeTab, setActiveTab] = useState<TabType>('standings');
 
@@ -74,7 +75,7 @@ export function MobileDashboardTabs({
                 showFullLink={true}
                 onExpand={() => {
                   // Navigate to full standings page
-                  window.location.href = `/standings/${DEFAULT_DIVISION_ID}`;
+                  window.location.href = `/standings/${divisionId}`;
                 }}
               />
             </div>
@@ -114,7 +115,7 @@ export function MobileDashboardTabs({
                 showFullLink={true}
                 onExpand={() => {
                   // Navigate to full leaderboard page
-                  window.location.href = `/leaderboard/${DEFAULT_DIVISION_ID}`;
+                  window.location.href = `/leaderboard/${divisionId}`;
                 }}
               />
             </div>

@@ -1,15 +1,18 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { Surface } from '@/components/ui/Surface';
 import { DivisionStatsPanel } from '@/components/DivisionStatsPanel';
 import { ResultSpotlight } from '@/components/dashboard/ResultSpotlight';
 import { SimplifiedMobileDashboard } from '@/components/mobile/SimplifiedMobileDashboard';
+import { DivisionSelector } from '@/components/DivisionSelector';
 import { DEFAULT_DIVISION_ID } from '@/lib/constants';
-import { getDivisionById } from '@/lib/getDivision';
+import { getDivisions } from '@/lib/getDivision';
 import { getDivisionStats } from '@/lib/getDivisionStats';
 import { getHeadlinesForDivision } from '@/lib/getHeadlines';
 import { getLatestResults } from '@/lib/getLatestResults';
 import { getStandings } from '@/lib/getStandings';
 import { getTopScorers } from '@/lib/getTopScorers';
+import { resolveActiveDivision } from '@/lib/resolveDivision';
 
 export const revalidate = 30;
 
@@ -21,11 +24,29 @@ function formatDate(value: string, options?: Intl.DateTimeFormatOptions) {
   }
 }
 
-export default async function HomePage() {
-  const divisionId = DEFAULT_DIVISION_ID;
+type HomePageProps = {
+  searchParams?: Record<string, string | string[] | undefined>;
+};
 
-  const [division, standings, scorers, latestResults, headlines, divisionStats] = await Promise.all([
-    getDivisionById(divisionId),
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const divisions = await getDivisions();
+  const requestedDivisionId = typeof searchParams?.divisionId === 'string'
+    ? searchParams.divisionId
+    : undefined;
+
+  const { activeDivision, shouldRedirect } = resolveActiveDivision({
+    divisions,
+    requestedDivisionId,
+    fallbackDivisionId: DEFAULT_DIVISION_ID,
+  });
+
+  if (shouldRedirect) {
+    redirect(`/?divisionId=${activeDivision.id}`);
+  }
+
+  const divisionId = activeDivision.id;
+
+  const [standings, scorers, latestResults, headlines, divisionStats] = await Promise.all([
     getStandings(divisionId),
     getTopScorers(divisionId),
     getLatestResults(divisionId, 12),
@@ -33,7 +54,7 @@ export default async function HomePage() {
     getDivisionStats(divisionId),
   ]);
 
-  const divisionName = division?.name ?? 'Division';
+  const divisionName = activeDivision.name ?? 'Division';
 
   const leaderRow = standings[0] ?? null;
   const secondPlace = standings[1] ?? null;
@@ -98,6 +119,10 @@ export default async function HomePage() {
                 <h1 className="dashboard-header-title">
                   {divisionName}
                 </h1>
+                <DivisionSelector
+                  divisions={divisions}
+                  selectedDivisionId={divisionId}
+                />
                 {headlineSnapshot.length > 0 && (
                   <div className="dashboard-headline">
                     <div className="dashboard-headline-meta">
@@ -124,6 +149,12 @@ export default async function HomePage() {
 
         {/* Simplified Mobile Dashboard */}
         <section className="mobile-only">
+          <Surface variant="solid" padding="md" rounded="xl" className="dashboard-card">
+            <DivisionSelector
+              divisions={divisions}
+              selectedDivisionId={divisionId}
+            />
+          </Surface>
           <SimplifiedMobileDashboard
             divisionName={divisionName}
             divisionId={divisionId}

@@ -1,9 +1,13 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 import { DEFAULT_DIVISION_ID } from '@/lib/constants';
 import { Surface } from '@/components/ui/Surface';
 import { getMatchesForDivision } from '@/lib/getMatch';
 import { AdminPageWrapper } from '@/app/admin/components/AdminPageWrapper';
+import { getDivisions } from '@/lib/getDivision';
+import { resolveActiveDivision } from '@/lib/resolveDivision';
+import { DivisionSelector } from '@/components/DivisionSelector';
 
 function formatDate(dateString: string) {
   try {
@@ -15,8 +19,27 @@ function formatDate(dateString: string) {
 
 export const revalidate = 30;
 
-export default async function AdminMatchesPage() {
-  const divisionId = DEFAULT_DIVISION_ID;
+type AdminMatchesPageProps = {
+  searchParams?: Record<string, string | string[] | undefined>;
+};
+
+export default async function AdminMatchesPage({ searchParams }: AdminMatchesPageProps) {
+  const divisions = await getDivisions();
+  const requestedDivisionId = typeof searchParams?.divisionId === 'string'
+    ? searchParams.divisionId
+    : undefined;
+
+  const { activeDivision, shouldRedirect } = resolveActiveDivision({
+    divisions,
+    requestedDivisionId,
+    fallbackDivisionId: DEFAULT_DIVISION_ID,
+  });
+
+  if (shouldRedirect) {
+    redirect(`/admin/matches?divisionId=${activeDivision.id}`);
+  }
+
+  const divisionId = activeDivision.id;
   const matches = await getMatchesForDivision(divisionId, 50);
 
   return (
@@ -31,6 +54,10 @@ export default async function AdminMatchesPage() {
             <p>
               Edit fixtures or verify results before publishing to the public feed.
             </p>
+            <DivisionSelector
+              divisions={divisions}
+              selectedDivisionId={divisionId}
+            />
           </div>
           <Link
             href="/admin/add-match"

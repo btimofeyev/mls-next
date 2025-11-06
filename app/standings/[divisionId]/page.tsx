@@ -1,9 +1,12 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { Surface } from '@/components/ui/Surface';
 import { StandingsTable } from '@/components/StandingsTable';
-import { getDivisionById } from '@/lib/getDivision';
+import { DivisionSelector } from '@/components/DivisionSelector';
+import { DEFAULT_DIVISION_ID } from '@/lib/constants';
+import { getDivisions } from '@/lib/getDivision';
 import { getStandings } from '@/lib/getStandings';
+import { resolveActiveDivision } from '@/lib/resolveDivision';
 
 type StandingsPageProps = {
   params: {
@@ -16,12 +19,19 @@ export const revalidate = 30;
 export default async function StandingsPage({ params }: StandingsPageProps) {
   const { divisionId } = params;
 
-  const division = await getDivisionById(divisionId);
-  if (!division) {
-    notFound();
+  const divisions = await getDivisions();
+  const { activeDivision, shouldRedirect } = resolveActiveDivision({
+    divisions,
+    requestedDivisionId: divisionId,
+    fallbackDivisionId: DEFAULT_DIVISION_ID,
+  });
+
+  if (shouldRedirect) {
+    redirect(`/standings/${activeDivision.id}`);
   }
 
-  const standings = await getStandings(divisionId);
+  const activeDivisionId = activeDivision.id;
+  const standings = await getStandings(activeDivisionId);
 
   return (
     <div className="dashboard-shell standings-page">
@@ -32,14 +42,18 @@ export default async function StandingsPage({ params }: StandingsPageProps) {
             <div className="standings-header-content">
               <div className="standings-header-main">
                 <div className="standings-header-eyebrow">
-                  {division.league_id ? 'League Standings' : 'Division Standings'}
+                  {activeDivision.league_id ? 'League Standings' : 'Division Standings'}
                 </div>
                 <h1 className="standings-header-title">
-                  {division.name}
+                  {activeDivision.name}
                 </h1>
+                <DivisionSelector
+                  divisions={divisions}
+                  selectedDivisionId={activeDivisionId}
+                />
               </div>
               <Link
-                href={`/leaderboard/${divisionId}`}
+                href={`/leaderboard/${activeDivisionId}`}
                 className="standings-header-action"
               >
                 View scorers →

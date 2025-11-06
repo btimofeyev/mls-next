@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import { createSupabaseServerClient } from './supabaseClient';
 import type { Goal, Match, Player, ScorerRow, Team } from './types';
+import { formatPlayerDisplayName } from './utils';
 
 export const getTopScorers = cache(async (divisionId: string): Promise<ScorerRow[]> => {
   const supabase = createSupabaseServerClient();
@@ -107,7 +108,7 @@ export const getTopScorers = cache(async (divisionId: string): Promise<ScorerRow
 
     return {
       playerId: entry.playerId,
-      playerName: player.name,
+      playerName: formatPlayerDisplayName(player.name),
       teamId: player.team_id,
       teamShortName: team?.short_name ?? 'Unknown',
       goals: entry.goals,

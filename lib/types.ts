@@ -10,6 +10,7 @@ export interface Division {
   league_id: string;
   name: string;
   short_name: string | null;
+  age_group: string | null;
   created_at: string | null;
 }
 

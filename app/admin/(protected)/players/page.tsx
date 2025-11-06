@@ -1,13 +1,36 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { DEFAULT_DIVISION_ID } from '@/lib/constants';
 import { Surface } from '@/components/ui/Surface';
 import { getPlayersForDivision } from '@/lib/getPlayers';
 import { AdminPageWrapper } from '@/app/admin/components/AdminPageWrapper';
+import { getDivisions } from '@/lib/getDivision';
+import { resolveActiveDivision } from '@/lib/resolveDivision';
+import { DivisionSelector } from '@/components/DivisionSelector';
 
 export const revalidate = 30;
 
-export default async function AdminPlayersPage() {
-  const divisionId = DEFAULT_DIVISION_ID;
+type AdminPlayersPageProps = {
+  searchParams?: Record<string, string | string[] | undefined>;
+};
+
+export default async function AdminPlayersPage({ searchParams }: AdminPlayersPageProps) {
+  const divisions = await getDivisions();
+  const requestedDivisionId = typeof searchParams?.divisionId === 'string'
+    ? searchParams.divisionId
+    : undefined;
+
+  const { activeDivision, shouldRedirect } = resolveActiveDivision({
+    divisions,
+    requestedDivisionId,
+    fallbackDivisionId: DEFAULT_DIVISION_ID,
+  });
+
+  if (shouldRedirect) {
+    redirect(`/admin/players?divisionId=${activeDivision.id}`);
+  }
+
+  const divisionId = activeDivision.id;
   const players = await getPlayersForDivision(divisionId);
 
   return (
@@ -17,6 +40,10 @@ export default async function AdminPlayersPage() {
           <div>
             <h2>Players</h2>
             <p>Manage roster details for the active division.</p>
+            <DivisionSelector
+              divisions={divisions}
+              selectedDivisionId={divisionId}
+            />
           </div>
           <Link
             href="/admin/add-player"
