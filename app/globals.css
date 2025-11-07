@@ -5276,6 +5276,68 @@ button, a, input, textarea, select {
   color: rgba(226, 232, 240, 0.92);
 }
 
+.admin-table-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.admin-table-search {
+  flex: 1 1 240px;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xxs);
+}
+
+.admin-table-meta {
+  font-size: var(--font-size-sm);
+  color: rgba(173, 186, 216, 0.9);
+  font-weight: var(--font-weight-medium);
+}
+
+.admin-table-error {
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  background: rgba(248, 113, 113, 0.15);
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: #fecaca;
+  font-size: var(--font-size-sm);
+}
+
+.admin-table-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.admin-table-delete {
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  border-radius: var(--radius-full);
+  padding: var(--spacing-xxs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fecaca;
+  background: rgba(127, 29, 29, 0.35);
+  cursor: pointer;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.admin-table-delete:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-table-delete:not(:disabled):hover {
+  background: rgba(248, 113, 113, 0.25);
+  border-color: rgba(252, 165, 165, 0.7);
+  transform: translateY(-1px);
+}
+
 /* Teams Page Viewport Optimizations */
 .teams-stats-compact {
   display: flex;

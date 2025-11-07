@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { format, parseISO } from 'date-fns';
 import { DEFAULT_DIVISION_ID } from '@/lib/constants';
 import { Surface } from '@/components/ui/Surface';
 import { getMatchesForDivision } from '@/lib/getMatch';
@@ -8,14 +7,7 @@ import { AdminPageWrapper } from '@/app/admin/components/AdminPageWrapper';
 import { getDivisions } from '@/lib/getDivision';
 import { resolveActiveDivision } from '@/lib/resolveDivision';
 import { DivisionSelector } from '@/components/DivisionSelector';
-
-function formatDate(dateString: string) {
-  try {
-    return format(parseISO(dateString), 'MMM d, yyyy');
-  } catch {
-    return dateString;
-  }
-}
+import { AdminMatchesTable } from '@/app/admin/components/AdminMatchesTable';
 
 export const revalidate = 30;
 
@@ -40,7 +32,7 @@ export default async function AdminMatchesPage({ searchParams }: AdminMatchesPag
   }
 
   const divisionId = activeDivision.id;
-  const matches = await getMatchesForDivision(divisionId, 50);
+  const matches = await getMatchesForDivision(divisionId);
 
   return (
     <AdminPageWrapper>
@@ -66,48 +58,7 @@ export default async function AdminMatchesPage({ searchParams }: AdminMatchesPag
           </Link>
         </Surface>
         <Surface padding="none">
-          <div>
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Date</th>
-                  <th scope="col">Fixture</th>
-                  <th scope="col">Score</th>
-                  <th scope="col">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {matches.length > 0 ? (
-                  matches.map((match) => (
-                    <tr
-                      key={match.id}
-                    >
-                      <td>{formatDate(match.match_date)}</td>
-                      <td>
-                        {match.home_team?.short_name ?? 'Home'} vs {match.away_team?.short_name ?? 'Away'}
-                      </td>
-                      <td>
-                        {match.home_score} — {match.away_score}
-                      </td>
-                      <td>
-                        <Link
-                          href={`/admin/matches/${match.id}/edit`}
-                        >
-                          Edit
-                        </Link>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={4}>
-                      No matches recorded yet.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+          <AdminMatchesTable matches={matches} />
         </Surface>
       </div>
     </AdminPageWrapper>

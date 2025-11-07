@@ -10,7 +10,10 @@ import { BottomNav } from '@/components/navigation/BottomNav';
 import { EnhancedBottomNav } from '@/components/mobile/EnhancedBottomNav';
 import { SWRProvider } from '@/components/providers/SWRProvider';
 import { PullToRefreshGate } from '@/components/providers/PullToRefreshGate';
+import { ReportCorrectionWidget } from '@/components/ReportCorrectionWidget';
+import { SupportWidget } from '@/components/SupportWidget';
 import { DEFAULT_DIVISION_ID } from '@/lib/constants';
+import { getDivisions } from '@/lib/getDivision';
 
 const inter = Inter({
   subsets: [ 'latin' ],
@@ -54,7 +57,9 @@ type RootLayoutProps = {
   children: ReactNode;
 };
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps) {
+  const divisions = await getDivisions();
+
   return (
     <html lang="en" className={inter.variable}>
       <body className={`${inter.className} app-body`}>
@@ -119,6 +124,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
           </div>
 
           <PullToRefreshGate />
+          <ReportCorrectionWidget divisions={divisions} />
+          <SupportWidget />
         </SWRProvider>
       </body>
     </html>

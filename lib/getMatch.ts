@@ -72,60 +72,63 @@ export const getMatchWithDetails = cache(async (matchId: string): Promise<AdminM
   } as AdminMatchDetail;
 });
 
-export const getMatchesForDivision = cache(
-  async (divisionId: string, limit = 20): Promise<AdminMatchDetail[]> => {
-    const supabase = createSupabaseServerClient();
-    const { data, error } = await supabase
-      .from('matches')
-      .select(
-        `
-        id,
-        division_id,
-        match_date,
-        home_team_id,
-        away_team_id,
-        home_score,
-        away_score,
-        notes,
-        home_team:home_team_id (
-          id,
-          name,
-          short_name
-        ),
-        away_team:away_team_id (
-          id,
-          name,
-          short_name
-        )
+export async function getMatchesForDivision(divisionId: string, limit?: number): Promise<AdminMatchDetail[]> {
+  const supabase = createSupabaseServerClient();
+  let query = supabase
+    .from('matches')
+    .select(
       `
+      id,
+      division_id,
+      match_date,
+      home_team_id,
+      away_team_id,
+      home_score,
+      away_score,
+      notes,
+      home_team:home_team_id (
+        id,
+        name,
+        short_name
+      ),
+      away_team:away_team_id (
+        id,
+        name,
+        short_name
       )
-      .eq('division_id', divisionId)
-      .order('match_date', { ascending: false })
-      .limit(limit);
+    `
+    )
+    .eq('division_id', divisionId)
+    .order('match_date', { ascending: false });
 
-    if (error) {
-      throw new Error(`Failed to fetch matches: ${error.message}`);
-    }
-
-    const normalizeTeam = (team: any) => {
-      if (!team) return null;
-      return Array.isArray(team) ? team[0] ?? null : team;
-    };
-
-    return (data ?? []).map((match) =>
-      ({
-        id: match.id,
-        division_id: match.division_id,
-        match_date: match.match_date,
-        home_team_id: match.home_team_id,
-        away_team_id: match.away_team_id,
-        home_score: match.home_score,
-        away_score: match.away_score,
-        notes: match.notes,
-        goals: [],
-        home_team: normalizeTeam(match.home_team),
-        away_team: normalizeTeam(match.away_team),
-      }) as AdminMatchDetail
-    );
+  if (typeof limit === 'number' && Number.isFinite(limit)) {
+    query = query.limit(limit);
   }
-);
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`Failed to fetch matches: ${error.message}`);
+  }
+
+  const normalizeTeam = (team: any) => {
+    if (!team) return null;
+    return Array.isArray(team) ? team[0] ?? null : team;
+  };
+
+  return (data ?? []).map((match) =>
+    ({
+      id: match.id,
+      division_id: match.division_id,
+      match_date: match.match_date,
+      home_team_id: match.home_team_id,
+      away_team_id: match.away_team_id,
+      home_score: match.home_score,
+      away_score: match.away_score,
+      notes: match.notes,
+      goals: [],
+      home_team: normalizeTeam(match.home_team),
+      away_team: normalizeTeam(match.away_team),
+    }) as AdminMatchDetail
+  );
+}

@@ -228,6 +228,42 @@ export interface AdminMatchDetail {
   } | null;
 }
 
+export type ScoreCorrectionStatus = 'pending' | 'in_review' | 'resolved';
+export type ScoreCorrectionCategory = 'score_update' | 'goal_update' | 'general';
+
+export interface ScoreCorrection {
+  id: string;
+  division_id: string | null;
+  division_name: string | null;
+  team_id: string | null;
+  team_name: string | null;
+  category: ScoreCorrectionCategory;
+  contact_name: string;
+  contact_email: string;
+  contact_role: string | null;
+  message: string;
+  status: ScoreCorrectionStatus;
+  notes: string | null;
+  created_at: string | null;
+}
+
+export interface NewScoreCorrectionPayload {
+  division_id?: string | null;
+  division_name?: string | null;
+  team_id?: string | null;
+  team_name?: string | null;
+  category: ScoreCorrectionCategory;
+  contact_name: string;
+  contact_email: string;
+  contact_role?: string | null;
+  message: string;
+}
+
+export interface UpdateScoreCorrectionPayload {
+  status?: ScoreCorrectionStatus;
+  notes?: string | null;
+}
+
 export interface AdminPlayerDetail {
   id: string;
   team_id: string;

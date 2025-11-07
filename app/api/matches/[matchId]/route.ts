@@ -78,3 +78,34 @@ export async function PUT(request: Request, { params }: { params: { matchId: str
     return NextResponse.json({ error: error instanceof Error ? error.message : 'Unexpected error.' }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request, { params }: { params: { matchId: string } }) {
+  const { matchId } = params;
+
+  if (!matchId) {
+    return NextResponse.json({ error: 'Match ID is required.' }, { status: 400 });
+  }
+
+  const admin = await getAdminFromRequest(request);
+  if (!admin) {
+    return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
+  }
+
+  try {
+    const supabase = createSupabaseServerClient();
+
+    const { error: deleteGoalsError } = await supabase.from('goals').delete().eq('match_id', matchId);
+    if (deleteGoalsError) {
+      return NextResponse.json({ error: deleteGoalsError.message }, { status: 500 });
+    }
+
+    const { error: deleteMatchError } = await supabase.from('matches').delete().eq('id', matchId);
+    if (deleteMatchError) {
+      return NextResponse.json({ error: deleteMatchError.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Unexpected error.' }, { status: 500 });
+  }
+}

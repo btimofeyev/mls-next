@@ -15,6 +15,7 @@ const navLinks = [
   { href: '/admin/matches', label: 'Matches' },
   { href: '/admin/players', label: 'Players' },
   { href: '/admin/headlines', label: 'Headlines' },
+  { href: '/admin/corrections', label: 'Corrections' },
   { href: '/admin/add-match', label: 'Add Match' },
   { href: '/admin/add-player', label: 'Add Player' },
   { href: '/admin/add-headline', label: 'Add Headline' },
