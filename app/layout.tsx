@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { Inter } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
 
 import './globals.css';
 import { Container } from '@/components/ui/Container';
@@ -126,6 +127,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           <PullToRefreshGate />
           <ReportCorrectionWidget divisions={divisions} />
           <SupportWidget />
+          <Analytics />
         </SWRProvider>
       </body>
     </html>
